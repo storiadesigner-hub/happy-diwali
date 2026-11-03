@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07070f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Happy Diwali">
+<title>Happy Diwali</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Hind:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#f6c453;--cream:#fff4dc;--top:#07070f;--bot:#0d0d1c;--a:0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark;
+-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html{scroll-padding-top:env(safe-area-inset-top,0px);overscroll-behavior:none}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#07070f}
+body{color:var(--cream);font-family:'Hind',system-ui,-apple-system,sans-serif;overflow:hidden;overscroll-behavior:none;
+-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+.stage{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:0 22px 4vh;
+background:radial-gradient(ellipse at 50% 78%,rgba(255,176,46,var(--a)) 0%,rgba(255,176,46,0) 70%),linear-gradient(var(--top),var(--bot))}
+header,.msg,section{position:relative;z-index:1}
+h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(2.6rem,12vw,4.5rem);color:var(--gold);margin:0;line-height:1.05}
+.hint{font-size:1.05rem;opacity:.8;margin:12px 0 0}
+.msg{max-width:21em;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.35rem,5.6vw,1.9rem);line-height:1.4;min-height:5.6em;margin:0;
+opacity:0;-webkit-transform:translateY(10px);transform:translateY(10px);transition:opacity .7s,transform .7s,-webkit-transform .7s}
+.msg.on{opacity:1;-webkit-transform:none;transform:none}
+.row{display:flex;gap:clamp(8px,3.5vw,24px);align-items:flex-end;justify-content:center}
+button{font:inherit;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;margin:0}
+button.diya{background:none;border:0;padding:6px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:4px;border-radius:12px}
+.diya svg{width:clamp(50px,15.5vw,80px);height:auto;display:block;overflow:visible}
+.flame{opacity:0;transform-box:fill-box;-webkit-transform-origin:50% 100%;transform-origin:50% 100%;-webkit-transform:scale(.3);transform:scale(.3);transition:opacity .5s,transform .5s,-webkit-transform .5s}
+.lit .flame{opacity:1;-webkit-transform:scale(1);transform:scale(1);-webkit-animation:flick 1.6s ease-in-out infinite alternate;animation:flick 1.6s ease-in-out infinite alternate}
+.halo{opacity:0;transition:opacity .8s}.lit .halo{opacity:.55}
+@-webkit-keyframes flick{0%{-webkit-transform:scale(1) rotate(-2deg)}50%{-webkit-transform:scale(1.06,.96) rotate(2deg)}100%{-webkit-transform:scale(.97,1.04) rotate(-1deg)}}
+@keyframes flick{0%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.06,.96) rotate(2deg)}100%{transform:scale(.97,1.04) rotate(-1deg)}}
+.btns{display:flex;gap:12px;justify-content:center;align-items:center;margin-top:16px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:999px;padding:8px 14px;font-size:.95rem;cursor:pointer}
+.pill:active{-webkit-transform:scale(.96);transform:scale(.96)}
+#share{opacity:0;pointer-events:none;transition:opacity .8s}#share.on{opacity:1;pointer-events:auto}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5}
+
+/* Akash kandil (hanging lantern) */
+button.kandil{position:relative;z-index:0;background:none;border:0;padding:0 14px;cursor:pointer;overflow:visible;
+height:clamp(130px,22vh,210px);flex:0 0 auto;
+-webkit-transform-origin:50% 0;transform-origin:50% 0;
+-webkit-animation:sway 5s ease-in-out infinite alternate;animation:sway 5s ease-in-out infinite alternate}
+.kandil svg{height:100%;width:auto;display:block;overflow:visible;transition:filter .8s,-webkit-filter .8s}
+.kandil .body{fill:#2b1d2f;stroke:#7a5a30;stroke-width:1.5;stroke-linejoin:round}
+.kandil .ribs{stroke:#7a5a30;stroke-width:1;opacity:.55;transition:stroke .7s,opacity .7s}
+.kandil .tail{fill:#3a2a38;stroke:#7a5a30;stroke-width:1;transition:fill .7s}
+.kandil .cap{fill:#b8862b}
+.kandil .strand{stroke:#e0a33a;stroke-width:1.4;stroke-linecap:round}
+.kandil .bead{fill:#e0a33a}
+.kandil .bulb{fill:#fff4dc;opacity:0;transform-box:fill-box;-webkit-transform-origin:center;transform-origin:center;transition:opacity .6s}
+.kandil .kglow{opacity:0;transition:opacity .8s;pointer-events:none}
+.kandil .litbody{opacity:0;transition:opacity .7s}
+.kandil.lit .litbody{opacity:1}
+.kandil.lit .tail{fill:#e0793a}
+.kandil.lit .ribs{stroke:#fff4dc;opacity:.5}
+.kandil.lit .bulb{opacity:1;-webkit-animation:pulse 2.2s ease-in-out infinite alternate;animation:pulse 2.2s ease-in-out infinite alternate}
+.kandil.lit .kglow{opacity:.8}
+.kandil.lit svg{-webkit-filter:drop-shadow(0 0 18px rgba(255,160,40,.7));filter:drop-shadow(0 0 18px rgba(255,160,40,.7))}
+.kandil.lit{-webkit-animation-duration:3.6s;animation-duration:3.6s}
+@-webkit-keyframes sway{0%{-webkit-transform:rotate(-3deg)}100%{-webkit-transform:rotate(3deg)}}
+@keyframes sway{0%{transform:rotate(-3deg)}100%{transform:rotate(3deg)}}
+@-webkit-keyframes pulse{0%{-webkit-transform:scale(.9);opacity:.85}100%{-webkit-transform:scale(1.12);opacity:1}}
+@keyframes pulse{0%{transform:scale(.9);opacity:.85}100%{transform:scale(1.12);opacity:1}}
+
+@media (max-height:640px){button.kandil{height:clamp(100px,19vh,150px)}.msg{min-height:4.6em}}
+@media (prefers-reduced-motion:reduce){.lit .flame{-webkit-animation:none;animation:none}.msg,.flame,.halo{transition:none}
+button.kandil{-webkit-animation:none;animation:none}.kandil.lit .bulb{-webkit-animation:none;animation:none}}
+</style>
+</head>
+<body>
+<main class="stage" id="stage">
+  <button class="kandil" id="kandil" type="button" aria-pressed="false" aria-label="Akash kandil, hanging lantern. Tap to light or turn off.">
+    <svg viewBox="0 0 120 225" aria-hidden="true">
+      <defs>
+        <radialGradient id="kg" cx="50%" cy="42%" r="60%">
+          <stop offset="0" stop-color="#fff4dc"/>
+          <stop offset=".35" stop-color="#ffd27a"/>
+          <stop offset=".7" stop-color="#ff9b2e"/>
+          <stop offset="1" stop-color="#e0602a"/>
+        </radialGradient>
+        <radialGradient id="kh" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#ffb02e" stop-opacity=".9"/>
+          <stop offset="1" stop-color="#ffb02e" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle class="kglow" cx="60" cy="95" r="78" fill="url(#kh)"/>
+      <line x1="60" y1="0" x2="60" y2="34" stroke="#b8862b" stroke-width="1.5"/>
+      <path class="cap" d="M52 40 L60 28 L68 40 L64 46 L56 46 Z"/>
+      <path class="tail" d="M52 145 L68 145 L60 186 Z"/>
+      <polygon class="body" points="60,43 69.95,70.98 96.77,58.23 84.02,85.05 112,95 84.02,104.95 96.77,131.77 69.95,119.02 60,147 50.05,119.02 23.23,131.77 35.98,104.95 8,95 35.98,85.05 23.23,58.23 50.05,70.98"/>
+      <polygon class="litbody" fill="url(#kg)" stroke="#7a5a30" stroke-width="1.5" stroke-linejoin="round" points="60,43 69.95,70.98 96.77,58.23 84.02,85.05 112,95 84.02,104.95 96.77,131.77 69.95,119.02 60,147 50.05,119.02 23.23,131.77 35.98,104.95 8,95 35.98,85.05 23.23,58.23 50.05,70.98"/>
+      <g class="ribs" fill="none">
+        <line x1="60" y1="43" x2="60" y2="147"/>
+        <line x1="8" y1="95" x2="112" y2="95"/>
+        <line x1="23.23" y1="58.23" x2="96.77" y2="131.77"/>
+        <line x1="96.77" y1="58.23" x2="23.23" y2="131.77"/>
+      </g>
+      <circle class="bulb" cx="60" cy="95" r="13"/>
+      <circle class="bead" cx="60" cy="190" r="3.5"/>
+      <line class="strand" x1="60" y1="193" x2="60" y2="222"/>
+      <line class="strand" x1="60" y1="193" x2="50" y2="218"/>
+      <line class="strand" x1="60" y1="193" x2="70" y2="218"/>
+      <line class="strand" x1="60" y1="193" x2="42" y2="212"/>
+      <line class="strand" x1="60" y1="193" x2="78" y2="212"/>
+    </svg>
+  </button>
+
+  <header>
+    <h1>Happy Diwali</h1>
+    <p class="hint" id="hint">It’s dark. Tap a diya or the kandil to bring light.</p>
+  </header>
+  <p class="msg" id="msg" aria-live="polite"></p>
+  <section>
+    <div class="row" id="row" role="group" aria-label="Diyas"></div>
+    <div class="btns">
+      <button class="pill" type="button" data-fx="anar" aria-label="Anar, flower pot">🌸 Anar</button>
+      <button class="pill" type="button" data-fx="chakri" aria-label="Chakri, ground spinner">🌀 Chakri</button>
+      <button class="pill" type="button" data-fx="sky" aria-label="Sky shots, aerial cake">🎆 Sky shots</button>
+      <button class="pill" id="share" type="button">Share</button>
+    </div>
+  </section>
+</main>
+<canvas id="fx"></canvas>
+<script>
+(function(){
+  var MSGS=['May every diya you light bring you brightness and good fortune.',
+    'May your home glow with warmth, laughter and love.',
+    'May light win over every dark corner of your year.',
+    'May good health and sweet moments follow you all year.',
+    'Shubh Deepavali! May joy shine on you and your family.'];
+  var N=MSGS.length,row=document.getElementById('row'),msg=document.getElementById('msg'),hint=document.getElementById('hint'),
+      share=document.getElementById('share'),stage=document.getElementById('stage'),kandil=document.getElementById('kandil'),
+      lit=0,kon=0,timer;
+  var svg='<svg viewBox="0 0 100 90" aria-hidden="true"><circle class="halo" cx="50" cy="38" r="40" fill="#ffb02e"/>'+
+    '<path class="flame" d="M50 6C60 20 66 28 62 38C60 44 55 46 50 46C45 46 40 44 38 38C34 28 44 22 50 6Z" fill="#ffb02e"/>'+
+    '<path class="flame" d="M50 22C55 30 57 34 55 39C54 42 52 43 50 43C48 43 46 42 45 39C43 34 47 30 50 22Z" fill="#fff4dc"/>'+
+    '<path d="M8 50H92C92 74 74 86 50 86C26 86 8 74 8 50Z" fill="#c8622b"/><path d="M8 50H92C91 54 88 57 84 59H16C12 57 9 54 8 50Z" fill="#e0793a"/>'+
+    '<rect x="47" y="44" width="6" height="8" rx="2" fill="#3a1d10"/></svg>';
+  for(var i=0;i<N;i++){(function(i){
+    var b=document.createElement('button');b.className='diya';b.type='button';
+    b.setAttribute('aria-label','Diya '+(i+1));b.setAttribute('aria-pressed','false');b.style.marginBottom=(i%2?'14px':'0');b.innerHTML=svg;
+    b.addEventListener('click',function(){tap(b,i)});row.appendChild(b);
+  })(i)}
+  function lerp(a,b,t){return Math.round(a+(b-a)*t)}
+  function mix(c1,c2,t){return 'rgb('+lerp(c1[0],c2[0],t)+','+lerp(c1[1],c2[1],t)+','+lerp(c1[2],c2[2],t)+')'}
+  function bright(){
+    var t=Math.min(1,(lit+kon*0.8)/(N+0.8));
+    stage.style.setProperty('--top',mix([7,7,15],[52,44,122],t));
+    stage.style.setProperty('--bot',mix([13,13,28],[170,84,34],t));
+    stage.style.setProperty('--a',(t*0.55).toFixed(2));
+  }
+  function show(text){
+    msg.classList.remove('on');clearTimeout(timer);
+    timer=setTimeout(function(){msg.textContent=text;msg.classList.add('on')},160);
+  }
+  function hintText(){
+    if(lit===0&&!kon)return 'It’s dark. Tap a diya or the kandil to bring light.';
+    if(lit===N&&kon)return 'The whole night is glowing. Happy Diwali!';
+    if(lit===N)return 'All diyas are lit. Tap the kandil to light it too.';
+    if(lit===0)return 'The kandil is glowing. Tap a diya to light it too.';
+    return (N-lit)+(N-lit===1?' diya':' diyas')+' left. Tap a lit diya to blow it out.';
+  }
+  function tap(b,i){
+    if(b.classList.contains('lit')){
+      b.classList.remove('lit');b.setAttribute('aria-pressed','false');lit--;bright();
+      hint.textContent=hintText();
+      if(lit===0){clearTimeout(timer);msg.classList.remove('on');if(!kon)share.classList.remove('on')}
+    }else{
+      b.classList.add('lit');b.setAttribute('aria-pressed','true');lit++;bright();burst(b,14,true);
+      hint.textContent=hintText();share.classList.add('on');show(MSGS[i]);
+    }
+    if(navigator.vibrate){try{navigator.vibrate(20)}catch(x){}}
+  }
+  kandil.addEventListener('click',function(){
+    if(kon){
+      kon=0;kandil.classList.remove('lit');kandil.setAttribute('aria-pressed','false');
+      if(lit===0)share.classList.remove('on');
+    }else{
+      kon=1;kandil.classList.add('lit');kandil.setAttribute('aria-pressed','true');
+      var r=kandil.getBoundingClientRect();burst(null,18,true,r.left+r.width/2,r.top+r.height*.45);
+      share.classList.add('on');
+    }
+    bright();hint.textContent=hintText();
+    if(navigator.vibrate){try{navigator.vibrate(20)}catch(x){}}
+  });
+  share.addEventListener('click',function(){
+    var d={title:'Happy Diwali',text:'Happy Diwali! Light a diya for me.',url:location.href};
+    try{if(navigator.share)navigator.share(d);else if(navigator.clipboard){navigator.clipboard.writeText(d.url);share.textContent='Link copied'}}catch(x){}
+  });
+
+  /* fireworks */
+  var cv=document.getElementById('fx'),ctx=cv.getContext('2d'),P=[],E=[],R=[],run=false,dpr=Math.min(window.devicePixelRatio||1,2),ac;
+  function size(){
+    var w=window.innerWidth,h=window.innerHeight;
+    cv.style.width=w+'px';cv.style.height=h+'px';
+    cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+  }
+  size();addEventListener('resize',size);addEventListener('orientationchange',function(){setTimeout(size,250)});
+  var COLS=['#f6c453','#ffb02e','#ff5d73','#5ee0ff','#b388ff','#fff4dc','#7dff9b'];
+  function raf(f){return (window.requestAnimationFrame||window.webkitRequestAnimationFrame||function(c){return setTimeout(c,16)})(f)}
+  function burst(el,n,small,px,py){
+    var x,y;
+    if(px!==undefined){x=px;y=py}
+    else if(el){var r=el.getBoundingClientRect();x=r.left+r.width/2;y=r.top+r.height*.3}
+    else{x=innerWidth*(.2+Math.random()*.6);y=innerHeight*(.15+Math.random()*.35)}
+    var c1=COLS[Math.floor(Math.random()*COLS.length)],c2=COLS[Math.floor(Math.random()*COLS.length)];
+    for(var k=0;k<n;k++){
+      var a=Math.PI*2*k/n+Math.random()*.2,s=(small?1.5:2.5)+Math.random()*(small?2:4.5);
+      P.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,d:.012+Math.random()*.012,c:k%2?c1:c2,r:small?2:2.6});
+    }
+    go();
+  }
+
+  /* audio — iOS needs the context created/resumed inside a real tap */
+  function actx(){
+    var C=window.AudioContext||window.webkitAudioContext;
+    if(!C)return null;
+    if(!ac)ac=new C();
+    if(ac.state==='suspended'||ac.state==='interrupted'){try{ac.resume()}catch(e){}}
+    return ac;
+  }
+  function unlock(){
+    try{var c=actx();if(!c)return;
+      var b=c.createBuffer(1,1,22050),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);
+      if(s.start)s.start(0);else s.noteOn(0);
+    }catch(e){}
+  }
+  document.addEventListener('touchend',unlock,{passive:true});
+  document.addEventListener('click',unlock,true);
+  function pop(){
+    try{var c=actx();if(!c)return;
+      var len=Math.floor(c.sampleRate*.25),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0);
+      for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4);
+      var s=c.createBufferSource(),g=c.createGain();g.gain.value=.5;s.buffer=buf;s.connect(g);g.connect(c.destination);s.start(0);
+    }catch(e){}
+  }
+  function hiss(d){try{var c=actx();if(!c)return;var len=Math.floor(c.sampleRate*d),b=c.createBuffer(1,len,c.sampleRate),a=b.getChannelData(0);
+    for(var i=0;i<len;i++)a[i]=(Math.random()*2-1)*.25*(1-i/len);
+    var s=c.createBufferSource(),f=c.createBiquadFilter();f.type='highpass';f.frequency.value=3000;s.buffer=b;s.connect(f);f.connect(c.destination);s.start(0)}catch(e){}}
+  function whistle(){try{var c=actx();if(!c)return;var o=c.createOscillator(),g=c.createGain(),t=c.currentTime;
+    o.frequency.setValueAtTime(500,t);o.frequency.exponentialRampToValueAtTime(1800,t+.9);
+    g.gain.setValueAtTime(.06,t);g.gain.linearRampToValueAtTime(0,t+.9);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.9)}catch(e){}}
+
+  function loop(){
+    step();ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,innerWidth,innerHeight);
+    for(var i=P.length-1;i>=0;i--){var p=P[i];
+      p.x+=p.vx;p.y+=p.vy;p.vy+=.06;p.vx*=.985;p.l-=p.d;
+      if(p.l<=0){P.splice(i,1);continue}
+      ctx.globalAlpha=p.l;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    if(P.length||E.length||R.length)raf(loop);else run=false;
+  }
+  function go(){if(!run){run=true;raf(loop)}}
+  function ground(){return row.getBoundingClientRect().bottom-8}
+  function launch(big,delay){
+    setTimeout(function(){whistle();
+      R.push({x:innerWidth*(.15+Math.random()*.7),y:ground(),vy:-10,top:innerHeight*(.12+Math.random()*.3),big:big});go()},delay);
+  }
+  function step(){
+    var i,k,a,s,e,p;
+    for(i=E.length-1;i>=0;i--){e=E[i];e.t++;
+      if(e.t>e.life){E.splice(i,1);continue}
+      if(e.type==='anar'){
+        for(k=0;k<8;k++){a=-Math.PI/2+(Math.random()-.5)*.9;s=4+Math.random()*3.5;
+          P.push({x:e.x,y:e.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,d:.02+Math.random()*.015,c:['#ffe9a0','#f6c453','#ffb02e','#fff4dc'][k%4],r:2.6})}
+      }else{
+        e.a+=.45;e.x+=e.dx;
+        for(k=0;k<4;k++){a=e.a+k*1.57+1.6;s=4+Math.random()*3;
+          P.push({x:e.x+Math.cos(e.a)*14,y:e.y+Math.sin(e.a)*14,vx:Math.cos(a)*s,vy:Math.sin(a)*s*.6-1,l:1,d:.04+Math.random()*.02,c:k%2?'#ffb02e':'#fff4dc',r:2.4})}
+      }
+    }
+    for(i=R.length-1;i>=0;i--){p=R[i];p.y+=p.vy;
+      P.push({x:p.x+(Math.random()-.5)*2,y:p.y,vx:(Math.random()-.5)*.6,vy:1+Math.random(),l:.8,d:.05,c:'#ffb02e',r:1.5});
+      if(p.y<=p.top){burst(null,p.big?90:65,false,p.x,p.y);pop();R.splice(i,1)}}
+  }
+  var FX={
+    cracker:function(){pop();burst(null,60,false);setTimeout(function(){burst(null,50,false)},180)},
+    anar:function(){hiss(2.2);E.push({type:'anar',x:innerWidth*(.2+Math.random()*.6),y:ground(),t:0,life:170});go()},
+    chakri:function(){hiss(2.5);E.push({type:'chakri',x:innerWidth*(.3+Math.random()*.4),y:ground(),t:0,life:190,a:0,dx:(Math.random()-.5)*1.2});go()},
+    rocket:function(){launch(false,0)},
+    sky:function(){for(var i=0;i<6;i++)launch(true,i*350)}
+  };
+  var fxb=document.querySelectorAll('[data-fx]');
+  for(var j=0;j<fxb.length;j++){(function(b){
+    b.addEventListener('click',function(){FX[b.getAttribute('data-fx')]();
+      if(navigator.vibrate){try{navigator.vibrate(30)}catch(x){}}});
+  })(fxb[j])}
+})();
+</script>
+</body>
+</html>
